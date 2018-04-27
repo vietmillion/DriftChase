@@ -24,6 +24,7 @@ cc.Class({
         this.dir = MOVE_DIR.top;
         this.next_dir = MOVE_DIR.left;
         this.drift = false;
+        this.death = false;
         this.body = this.getComponent(cc.RigidBody);
         cc.log('ccccccc ' + MOVE_DIR);
     },
@@ -31,6 +32,7 @@ cc.Class({
     start_drive(){
         this.dir = MOVE_DIR.top;
         this.drift = false;
+        this.death = false;
     },
 
     drifting(next_dir){
@@ -52,71 +54,82 @@ cc.Class({
         return speed;
     },
 
+    onBeginContact: function(contact, selfCollider, otherCollider){
+        this.body.linearVelocity = cc.v2(0, 0);
+        this.death = true;
+        cc.log('detect collision');
+        this.node.dispatchEvent(new cc.Event.EventCustom('car_death', true));
+    },
+
+
     update (dt) {
         var speed = this.body.linearVelocity;
         const speed_drift = 100;
         // cc.log(speed);
-        if(this.drift === false) 
-        {
-            speed = this.updateAccel(speed, dt, this.dir);
-        }
-        else
-        {
-            if(this.dir === MOVE_DIR.top) {
-                speed.y -= this.drag * dt;
-                if(speed.y < 0)
-                {
-                    speed.y = 0;
-                    this.dir = this.next_dir;
-                    this.drift = false;
-                }
-                if(Math.abs(speed.y) < speed_drift){
-                    speed = this.updateAccel(speed, dt, this.next_dir);
-                    cc.log(speed.toString());
-                }
-            } else if(this.dir === MOVE_DIR.down) {
-                speed.y += this.drag * dt;
-                if(speed.y > 0)
-                {
-                    speed.y = 0;
-                    this.dir = this.next_dir;
-                    this.drift = false;
-                }
-                if(Math.abs(speed.y) < speed_drift){
-                    speed = this.updateAccel(speed, dt, this.next_dir);
-                }
- 
-            } else if(this.dir === MOVE_DIR.left){
-                speed.x += this.drag * dt;
-                if(speed.x > 0)
-                {
-                    speed.x = 0;
-                    this.dir = this.next_dir;
-                    this.drift = false;
-                }
-                if(Math.abs(speed.x) < speed_drift){
-                    speed = this.updateAccel(speed, dt, this.next_dir);
-                }
- 
+        if(!this.death) {
+            if(this.drift === false) 
+            {
+                speed = this.updateAccel(speed, dt, this.dir);
+            }
+            else
+            {
+                // cc.log(this.node.rotation);
+                if(this.dir === MOVE_DIR.top) {
+                    speed.y -= this.drag * dt;
+                    if(speed.y < 0)
+                    {
+                        speed.y = 0;
+                        this.dir = this.next_dir;
+                        this.drift = false;
+                    }
+                    if(Math.abs(speed.y) < speed_drift){
+                        speed = this.updateAccel(speed, dt, this.next_dir);
+                    }
+                } else if(this.dir === MOVE_DIR.down) {
+                    speed.y += this.drag * dt;
+                    if(speed.y > 0)
+                    {
+                        speed.y = 0;
+                        this.dir = this.next_dir;
+                        this.drift = false;
+                    }
+                    if(Math.abs(speed.y) < speed_drift){
+                        speed = this.updateAccel(speed, dt, this.next_dir);
+                    }
+    
+                } else if(this.dir === MOVE_DIR.left){
+                    speed.x += this.drag * dt;
+                    if(speed.x > 0)
+                    {
+                        speed.x = 0;
+                        this.dir = this.next_dir;
+                        this.drift = false;
+                    }
+                    if(Math.abs(speed.x) < speed_drift){
+                        speed = this.updateAccel(speed, dt, this.next_dir);
+                    }
+    
 
-            } else if(this.dir === MOVE_DIR.right){
-                speed.x -= this.drag * dt;
-                if(speed.x < 0)
-                {
-                    speed.x = 0;
-                    this.dir = this.next_dir;
-                    this.drift = false;
-                }
-                if(Math.abs(speed.x) < speed_drift){
-                    speed = this.updateAccel(speed, dt, this.next_dir);
+                } else if(this.dir === MOVE_DIR.right){
+                    speed.x -= this.drag * dt;
+                    if(speed.x < 0)
+                    {
+                        speed.x = 0;
+                        this.dir = this.next_dir;
+                        this.drift = false;
+                    }
+                    if(Math.abs(speed.x) < speed_drift){
+                        speed = this.updateAccel(speed, dt, this.next_dir);
+                    }
+
                 }
 
             }
 
+            // cc.log(speed.toString());
+
+            this.body.linearVelocity = speed;
+
         }
-
-        // cc.log(speed.toString());
-
-        this.body.linearVelocity = speed;
     },
 });
