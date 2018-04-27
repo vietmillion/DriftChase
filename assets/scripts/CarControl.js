@@ -39,20 +39,26 @@ cc.Class({
         this.next_dir = next_dir;
     },
 
+    updateAccel(speed, dt, next_dir){
+        if(next_dir === MOVE_DIR.top) {
+            speed.y += this.acceleration * dt;
+        } else if(next_dir === MOVE_DIR.down) {
+            speed.y -= this.acceleration * dt;
+        } else if(next_dir === MOVE_DIR.left){
+            speed.x -= this.acceleration * dt;
+        } else if(next_dir === MOVE_DIR.right){
+            speed.x += this.acceleration * dt;
+        }
+        return speed;
+    },
+
     update (dt) {
         var speed = this.body.linearVelocity;
+        const speed_drift = 100;
         // cc.log(speed);
         if(this.drift === false) 
         {
-            if(this.dir === MOVE_DIR.top) {
-                speed.y += this.acceleration * dt;
-            } else if(this.di === MOVE_DIR.down) {
-                speed.y -= this.acceleration * dt;
-            } else if(this.dir === MOVE_DIR.left){
-                speed.x -= this.acceleration * dt;
-            } else if(this.dir === MOVE_DIR.right){
-                speed.x += this.acceleration * dt;
-            }
+            speed = this.updateAccel(speed, dt, this.dir);
         }
         else
         {
@@ -64,7 +70,10 @@ cc.Class({
                     this.dir = this.next_dir;
                     this.drift = false;
                 }
-
+                if(Math.abs(speed.y) < speed_drift){
+                    speed = this.updateAccel(speed, dt, this.next_dir);
+                    cc.log(speed.toString());
+                }
             } else if(this.dir === MOVE_DIR.down) {
                 speed.y += this.drag * dt;
                 if(speed.y > 0)
@@ -73,7 +82,10 @@ cc.Class({
                     this.dir = this.next_dir;
                     this.drift = false;
                 }
-
+                if(Math.abs(speed.y) < speed_drift){
+                    speed = this.updateAccel(speed, dt, this.next_dir);
+                }
+ 
             } else if(this.dir === MOVE_DIR.left){
                 speed.x += this.drag * dt;
                 if(speed.x > 0)
@@ -82,7 +94,10 @@ cc.Class({
                     this.dir = this.next_dir;
                     this.drift = false;
                 }
-
+                if(Math.abs(speed.x) < speed_drift){
+                    speed = this.updateAccel(speed, dt, this.next_dir);
+                }
+ 
 
             } else if(this.dir === MOVE_DIR.right){
                 speed.x -= this.drag * dt;
@@ -92,12 +107,15 @@ cc.Class({
                     this.dir = this.next_dir;
                     this.drift = false;
                 }
+                if(Math.abs(speed.x) < speed_drift){
+                    speed = this.updateAccel(speed, dt, this.next_dir);
+                }
 
             }
 
         }
 
-
+        // cc.log(speed.toString());
 
         this.body.linearVelocity = speed;
     },
