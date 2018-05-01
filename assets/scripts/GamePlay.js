@@ -17,15 +17,16 @@ cc.Class({
         car: cc.Node,
         map: cc.Node,
         camera: cc.Node,
+        ui: cc.Node,
     },
 
 
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
+    onLoad: function () {
 
-
+        this.ui.active = false;
         this.car_control = this.car.getComponent('CarControl');
         var canvas = cc.find('Canvas');
         this.list_dir = this.map.getComponent('Map').list_dir;
@@ -34,6 +35,7 @@ cc.Class({
         this.node.on('car_death', function(event){
             this.car.stopAllActions();
             this.camera.stopAllActions();
+            this.ui.active = true;
         }, this);
 
         canvas.on(cc.Node.EventType.TOUCH_END, function(event){
@@ -47,10 +49,19 @@ cc.Class({
             this.car_control.start_rotate();
 
         }, this);
-
+        this.restart();
 
     },
 
+    restart: function(){
+        this.ui.active = false;
+        this.car.position = cc.v2(0, - 200);
+        this.car_control.start_drive();
+    },
+
+    onButtonRestart: function( event, customEventData) {
+        this.restart();
+    },
 
 
 

@@ -26,11 +26,9 @@ cc.Class({
         this.death = false;
         this.rotating = false;
         this.body = this.getComponent(cc.RigidBody);
-        cc.log('ccccccc ' + MOVE_DIR);
     },
     
     start_drive(){
-        this.dir = MOVE_DIR.top;
         this.rotating = false;
         this.death = false;
     },
