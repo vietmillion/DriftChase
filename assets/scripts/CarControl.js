@@ -14,32 +14,36 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        acceleration: 100,
-        drag: 100,
+        accelerationX: 100,
+        accelerationY: 100,
+        max_speed: 200,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.dir = MOVE_DIR.top;
-        this.next_dir = MOVE_DIR.left;
-        this.drift = false;
+        this.speed = 0;
         this.death = false;
+        this.rotating = false;
         this.body = this.getComponent(cc.RigidBody);
         cc.log('ccccccc ' + MOVE_DIR);
     },
     
     start_drive(){
         this.dir = MOVE_DIR.top;
-        this.drift = false;
+        this.rotating = false;
         this.death = false;
     },
 
-    drifting(next_dir){
-        cc.log('start drifting ' + next_dir);
-        this.drift = true;
-        this.next_dir = next_dir;
+    start_rotate(){
+        this.rotating = true;
     },
+
+    stop_rotate(){
+        this.rotating = false;
+    },
+
+
 
     updateAccel(speed, dt, next_dir){
         if(next_dir === MOVE_DIR.top) {
@@ -64,70 +68,30 @@ cc.Class({
 
     update (dt) {
         var speed = this.body.linearVelocity;
-        const speed_drift = 100;
         // cc.log(speed);
         if(!this.death) {
-            if(this.drift === false) 
-            {
-                speed = this.updateAccel(speed, dt, this.dir);
+            
+            speed.y += this.accelerationY * dt;
+            if (!this.rotating){
+                speed.x += this.accelerationX * dt;
+            }else{
+                speed.x -= this.accelerationX * dt;
             }
-            else
-            {
-                // cc.log(this.node.rotation);
-                if(this.dir === MOVE_DIR.top) {
-                    speed.y -= this.drag * dt;
-                    if(speed.y < 0)
-                    {
-                        speed.y = 0;
-                        this.dir = this.next_dir;
-                        this.drift = false;
-                    }
-                    if(Math.abs(speed.y) < speed_drift){
-                        speed = this.updateAccel(speed, dt, this.next_dir);
-                    }
-                } else if(this.dir === MOVE_DIR.down) {
-                    speed.y += this.drag * dt;
-                    if(speed.y > 0)
-                    {
-                        speed.y = 0;
-                        this.dir = this.next_dir;
-                        this.drift = false;
-                    }
-                    if(Math.abs(speed.y) < speed_drift){
-                        speed = this.updateAccel(speed, dt, this.next_dir);
-                    }
-    
-                } else if(this.dir === MOVE_DIR.left){
-                    speed.x += this.drag * dt;
-                    if(speed.x > 0)
-                    {
-                        speed.x = 0;
-                        this.dir = this.next_dir;
-                        this.drift = false;
-                    }
-                    if(Math.abs(speed.x) < speed_drift){
-                        speed = this.updateAccel(speed, dt, this.next_dir);
-                    }
-    
-
-                } else if(this.dir === MOVE_DIR.right){
-                    speed.x -= this.drag * dt;
-                    if(speed.x < 0)
-                    {
-                        speed.x = 0;
-                        this.dir = this.next_dir;
-                        this.drift = false;
-                    }
-                    if(Math.abs(speed.x) < speed_drift){
-                        speed = this.updateAccel(speed, dt, this.next_dir);
-                    }
-
-                }
-
+            
+            if(speed.y >= this.max_speed){
+                speed.y = this.max_speed;
             }
 
-            // cc.log(speed.toString());
+            if(speed.x > this.max_speed){
+                speed.x = this.max_speed;
+            } else if(speed.x < -this.max_speed){
+                speed.x = -this.max_speed;
+            }
 
+            this.node.rotation = cc.radiansToDegrees(cc.pAngleSigned(speed, cc.v2(0, 1)));
+
+            cc.log(speed.toString() +  ' ' + this.node.rotation);
+             
             this.body.linearVelocity = speed;
 
         }

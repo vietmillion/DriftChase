@@ -14,15 +14,36 @@ cc.Class({
 
     properties: {
         list_dir:[cc.String],
+        collision:cc.Node,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.curId = 0;        
+        let offset = 0;
+        for(let i = 0; i < 10; i++){
+            let collider = this.collision.addComponent(cc.PhysicsPolygonCollider);
+            let points = [];
+            points.push(cc.v2(0, 320 + offset));
+            points.push(cc.v2(-320, 0 + offset));
+            points.push(cc.v2(-320, 640 + offset));
+            collider.points = points;
+
+            collider = this.collision.addComponent(cc.PhysicsPolygonCollider);
+            points = [];
+            points.push(cc.v2(0, 320 + offset + 320));
+            points.push(cc.v2(320, 0 + offset + 320));
+            points.push(cc.v2(320, 640 + offset + 320));
+            collider.points = points;
+
+
+            offset += 640;
+
+        }
+        
+
     },
     startGame(){
-        this.curId = 0;
     },
 
     nextDir(){

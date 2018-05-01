@@ -24,6 +24,7 @@ cc.Class({
 
     onEnable: function(){
         cc.director.getPhysicsManager().attachDebugDrawToCamera(this.camera);
+        
     },   
 
     onDisable: function(){
@@ -32,7 +33,7 @@ cc.Class({
 
     lateUpdate: function(dt){
         let targetPos = this.target.convertToWorldSpaceAR(cc.Vec2.ZERO);
-        this.node.position = targetPos;
+        this.node.y = targetPos.y;
     }
 
     // update (dt) {},
