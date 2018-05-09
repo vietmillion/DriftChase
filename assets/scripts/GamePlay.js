@@ -31,6 +31,7 @@ cc.Class({
         var canvas = cc.find('Canvas');
         this.list_dir = this.map.getComponent('Map').list_dir;
         this.cur_idx = 0;
+        this.map_control = this.map.getComponent('Map');
 
         this.node.on('car_death', function(event){
             this.car.stopAllActions();
@@ -81,6 +82,7 @@ cc.Class({
     },
 
     onButtonRestart: function( event, customEventData) {
+        this.map_control.reset();
         this.restart();
     },
 
@@ -90,5 +92,7 @@ cc.Class({
 
     },
 
-    // update (dt) {},
+    update (dt) {
+        this.map_control.update(this.car_control.node.getPosition());
+    },
 });
