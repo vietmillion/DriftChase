@@ -88,8 +88,6 @@ cc.Class({
 
             this.node.rotation = cc.radiansToDegrees(cc.pAngleSigned(speed, cc.v2(0, 1)));
 
-            cc.log(speed.toString() +  ' ' + this.node.rotation);
-             
             this.body.linearVelocity = speed;
 
         }

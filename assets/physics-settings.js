@@ -1,5 +1,7 @@
-let physicsManager = cc.director.getPhysicsManager();
-physicsManager.enabled = true;
+
+
+var physicsManager = cc.director.getPhysicsManager();
+physicsManager.enabled = !0;
 
 physicsManager.debugDrawFlags = 
     // 0;

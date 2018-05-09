@@ -8,7 +8,7 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 
-const MOVE_DIR = require('Constant').MOVE_DIR; 
+const MOVE_DIR = require('./Constant').MOVE_DIR; 
 
 cc.Class({
     extends: cc.Component,
@@ -50,6 +50,27 @@ cc.Class({
 
         }, this);
         this.restart();
+
+        var contextId = FBInstant.context.getID();
+        console.log('context type' + FBInstant.context.getType());
+        FBInstant.getLeaderboardAsync('NoContextLeaderboard')
+.then(function(leaderboard) {
+console.log('aaaaaaa ' + leaderboard.getName()); // 'my_awesome_leaderboard'
+leaderboard.setScoreAsync(42);
+return leaderboard.getEntriesAsync(10, 0);
+})
+.then(function(entries){
+    for(let i = 0; i < entries.length; i++){
+        console.log(entries[i].getRank() + '. ' +
+                    entries[i].getPlayer().getName() + ': ' +
+                    entries[i].getScore()
+        );
+    }
+})
+.catch(function(err){
+console.log('error ' + JSON.stringify(err) );
+});
+        console.log("cccccc ccc ");
 
     },
 
