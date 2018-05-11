@@ -16,6 +16,13 @@ class FBManager {
                 resolve(fake);
             });
 
+        } else {
+            return FBInstant.getLeaderboardAsync('NoContextLeaderboard')
+            .then(function(leaderboard) {
+            console.log('aaaaaaa ' + leaderboard.getName()); // 'my_awesome_leaderboard'
+            leaderboard.setScoreAsync(42);
+            return leaderboard.getEntriesAsync(10, 0);
+            });
         }
     }
 }
