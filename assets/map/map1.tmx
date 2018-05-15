@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="left-down" width="10" height="50" tilewidth="64" tileheight="64" infinite="0" nextobjectid="6">
+ <tileset firstgid="1" source="spritesheet_tiles.tsx"/>
+ <layer name="Tile Layer 1" width="10" height="50">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAoGHnAOIbXEqKOnGhAAADjAAEk=
+  </data>
+ </layer>
+ <objectgroup name="collision">
+  <object id="2" name="0" x="0" y="2691.57">
+   <polygon points="0,0 255.004,252.454 1.27502,508.734"/>
+  </object>
+  <object id="3" name="1" x="640.061" y="2500.32">
+   <polygon points="0,0 -256.279,253.729 -1.27502,510.009"/>
+  </object>
+  <object id="4" x="1.27502" y="1795.23">
+   <polygon points="0,0 316.206,313.655 -2.55004,636.236"/>
+  </object>
+  <object id="5" x="637.511" y="1857.71">
+   <polygon points="0,0 -443.708,-447.533 2.55004,-900.166"/>
+  </object>
+ </objectgroup>
+</map>

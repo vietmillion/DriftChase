@@ -24,6 +24,8 @@ cc.Class({
         list_dir:[cc.String],
         collision:cc.Node,
 
+        map_prefab: cc.Prefab,
+
         previousLeftPos: cc.v2,
         previousRightPos: cc.v2,
 
@@ -36,6 +38,7 @@ cc.Class({
 
         this.elements = new Queue();
         this.reset();
+        // this.block = cc.instantiate(this.map_prefab);
 
     },
     startGame(){
@@ -53,16 +56,16 @@ cc.Class({
         //rotate vector distance to create direction vector
         let v2Direction = cc.v2(distance,0);
         v2Direction.rotateSelf( dirAngle * Math.PI / 180);
-        cc.log("v2Direction : ", v2Direction);
+        // cc.log("v2Direction : ", v2Direction);
         
         // get H point
         let v2Hpoint = cc.v2( rootPos.add (v2Direction));
-        cc.log("v2Hpoint begin : ", v2Hpoint);
+        // cc.log("v2Hpoint begin : ", v2Hpoint);
 
     
         // slide direction
         let v2SlideDir = cc.v2(slideLenght,0);
-        cc.log("v2SlideDir 0 : ", v2SlideDir);
+        // cc.log("v2SlideDir 0 : ", v2SlideDir);
         
         v2SlideDir.rotateSelf( hypotenuseAngle * Math.PI / 180);
         if(Math.random() < 0.5)
@@ -71,12 +74,12 @@ cc.Class({
         }
         v2SlideDir = v2SlideDir.mul( sign);
 
-        cc.log("v2 Slide dir : ", v2SlideDir);
+        // cc.log("v2 Slide dir : ", v2SlideDir);
         
         // add slide distance to H point 
         let v2RightPoint = cc.v2(v2Hpoint.add(v2SlideDir));
 
-         cc.log("v2RightPoint : ", v2RightPoint);
+        //  cc.log("v2RightPoint : ", v2RightPoint);
         return v2RightPoint;
     },
    
